@@ -377,18 +377,17 @@ var styles = [
     }
 ];
 
-function initMap() {  
-    console.log('init map');   
+function initMap() {   
     var styledMap = new google.maps.StyledMapType(styles, { name: "Styled Map" });
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -33.865627, lng: 151.207275 },
-        zoom: 14,
+        zoom: 18,
         disableDefaultUI: true
     });
     map.mapTypes.set('map_style', styledMap);
     map.setMapTypeId('map_style');
 
-    var marker_image = 'images/P_green.png';
+    var marker_image = 'images/P_green.svg';
     markers = [];
 
     $.getJSON('/parking/disabled', function(data) {
@@ -443,7 +442,7 @@ app.service('GeoCoderService', function($q) {
     }
 });
 
-app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoCoderService) {
+app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoCoderService, $location) {
     $scope.toggleLeft = buildToggler('left');
     $scope.isOpenLeft = function(){
       return $mdSidenav('left').isOpen();
@@ -463,6 +462,10 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoC
     $scope.toggleFilterMenu = function () {
         $scope.showFilters = !$scope.showFilters;
     };
+
+    $scope.currentLocation = function () {
+        $location.path('/');
+    }
 
     $scope.parkingTypeOptions = [
         { value : '<1P', distance : 1 },

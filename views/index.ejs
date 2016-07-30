@@ -37,7 +37,7 @@
             <!--<md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
               <md-icon class="material-icons">menu</md-icon>
             </md-button>-->
-            <md-button class="md-icon-button" aria-label="More">
+            <md-button class="md-icon-button" aria-label="More" ng-click="currentLocation()">
               <md-icon class="material-icons">location_on</md-icon>
             </md-button>
             <h2>
@@ -105,9 +105,7 @@
         </div>
         <div ng-view layout="column" layout-fill layout-align="top center">
         </div>
-        <div flex></div>
       </md-content>
-
     </section>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
