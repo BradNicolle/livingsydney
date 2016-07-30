@@ -12,10 +12,7 @@
   <link rel="stylesheet" href="/stylesheets/style.css" />
 </head>
 
-<body ng-app="BlankApp" ng-cloak>
-  <!--<div id="logo"><%= title %></div>
-    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
-    <div id="map"></div>-->
+<body ng-app="livingSydney" ng-cloak>
   <!--
     Your HTML content here
   -->
@@ -106,8 +103,7 @@
             <div layout="row" flex="10"></div>
           </div>
         </div>
-        <div layout="column" layout-fill layout-align="top center">
-          <div id="map"></div>
+        <div ng-view layout="column" layout-fill layout-align="top center">
         </div>
         <div flex></div>
       </md-content>
@@ -118,10 +114,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.1.1/bootstrap-slider.min.js"></script>
   <!-- Angular Material requires Angular.js Libraries -->
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-aria.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-messages.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-aria.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-messages.min.js"></script>
 
   <!-- Angular Material Library -->
   <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>

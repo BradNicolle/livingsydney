@@ -377,7 +377,8 @@ var styles = [
     }
 ];
 
-function initMap() {     
+function initMap() {  
+    console.log('init map');   
     var styledMap = new google.maps.StyledMapType(styles, { name: "Styled Map" });
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -33.865627, lng: 151.207275 },
@@ -408,7 +409,23 @@ function initMap() {
     
 }
 
-var app = angular.module('BlankApp', ['ngMaterial']);
+var app = angular.module('livingSydney', ['ngRoute', 'ngMaterial']);
+
+app.config(function($locationProvider, $routeProvider) {
+    $locationProvider.hashPrefix('!');
+
+    $routeProvider.
+        when('/', {
+            templateUrl: 'templates/index.html',
+            controller: 'IndexCtrl'
+        }).
+        when('/confirmed', {
+            templateUrl: 'templates/confirmed.html',
+            controller: 'ConfirmationCtrl'
+        }).
+        otherwise('/phones');
+});
+
 app.service('GeoCoderService', function($q) {
     this.geoCodeAddress = function(address) {
         this.geocoder = new google.maps.Geocoder();
@@ -427,9 +444,6 @@ app.service('GeoCoderService', function($q) {
 });
 
 app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoCoderService) {
-    $log.debug(GeoCoderService);
-    initMap();
-
     $scope.toggleLeft = buildToggler('left');
     $scope.isOpenLeft = function(){
       return $mdSidenav('left').isOpen();
@@ -482,4 +496,7 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoC
           $log.debug("close LEFT is done");
         });
     };
+  })
+  .controller('IndexCtrl', function () {
+      initMap();
   });
