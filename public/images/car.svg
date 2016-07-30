@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="73px" height="38px" viewBox="0 0 73 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39 (31667) - http://www.bohemiancoding.com/sketch -->
+    <title>CAR</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Mobile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-3-Copy-5" transform="translate(-457.000000, -451.000000)">
+            <g id="CAR" transform="translate(457.665570, 451.970278)">
+                <rect id="Rectangle-4-Copy-2" fill="#A7ADAF" x="46.9082905" y="0" width="3.16947909" height="6.37931034" rx="1.58473955"></rect>
+                <rect id="Rectangle-2" fill="#D8D8D8" x="0" y="3.82758621" width="71.6302274" height="28.7068966" rx="5"></rect>
+                <path d="M12.6779164,12.6574826 C12.6779164,9.89478296 14.908115,7.46000759 17.6546112,7.21966153 L25.2608586,6.55403833 C26.3635844,6.45753873 27.2575202,7.27577119 27.2575202,8.37138475 L27.2575202,27.9906842 C27.2575202,29.0908765 26.3674478,29.9048683 25.2608586,29.8080306 L17.6546112,29.1424074 C14.9060585,28.9018814 12.6779164,26.4739236 12.6779164,23.7045864 L12.6779164,12.6574826 Z" id="Rectangle-2-Copy" fill="#1C1F37"></path>
+                <path d="M44.3727073,12.6574826 C44.3727073,9.89478296 46.6029059,7.46000759 49.3494021,7.21966153 L56.9556495,6.55403833 C58.0583753,6.45753873 58.9523111,7.27577119 58.9523111,8.37138475 L58.9523111,27.9906842 C58.9523111,29.0908765 58.0622387,29.9048683 56.9556495,29.8080306 L49.3494021,29.1424074 C46.6008494,28.9018814 44.3727073,26.4739236 44.3727073,23.7045864 L44.3727073,12.6574826 Z" id="Rectangle-2-Copy-2" fill="#1C1F37" transform="translate(51.662509, 18.181078) scale(-1, 1) translate(-51.662509, -18.181078) "></path>
+                <rect id="Rectangle-3" fill="#FFFFFF" x="27.2575202" y="6.37931034" width="17.1151871" height="23.6034483"></rect>
+                <rect id="Rectangle-4" fill="#A7ADAF" x="68.4607483" y="10.2068966" width="3.16947909" height="15.9482759"></rect>
+                <rect id="Rectangle-4-Copy" fill="#A7ADAF" x="46.9082905" y="30.6206897" width="3.16947909" height="6.37931034" rx="1.58473955"></rect>
+            </g>
+        </g>
+    </g>
+</svg>
