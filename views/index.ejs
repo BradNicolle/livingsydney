@@ -37,8 +37,11 @@
       <md-content flex>
         <md-toolbar class="md-hue-2">
           <div class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
+            <!--<md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
               <md-icon class="material-icons">menu</md-icon>
+            </md-button>-->
+            <md-button class="md-icon-button" aria-label="More">
+              <md-icon class="material-icons">location_on</md-icon>
             </md-button>
             <h2>
               <span><%= title %></span>
@@ -67,12 +70,12 @@
           </div>
         </md-toolbar>
         <div layout="column" class="sp-filters" ng-show="showFilters">
-          <div layout="row" layout-align="left center">
+          <div layout="row" layout-align="left center" class="pad-em">
             <div layout="row" flex="40" class="conditions">
               <md-checkbox ng-model="free" aria-label="Free Parking" flex="20">Free</md-checkbox>
               <md-checkbox ng-model="disability" aria-label="Disability Parking" flex="20">Disability</md-checkbox>
             </div>
-            <div layout="row" flex="10">
+            <div layout="row" flex="15">
               <h3>Parking Type:</h3>
             </div>
             <div layout="row" flex>
@@ -82,10 +85,18 @@
                   </md-slider>
                 </div>
                 <div layout="row">
-                  <span flex="30">&lt;1P</span>
-                  <span flex="35">1P</span>
-                  <span flex="30">2P</span>
-                  <span flex>2P+</span>
+                  <span flex="30">
+                    <span class="round-num">&lt;1P</span>
+                  </span>
+                  <span flex="35" class="padleft-dot-five">
+                    <span class="round-num">1P</span>
+                  </span>
+                  <span flex="30">
+                    <span class="round-num">2P</span>
+                  </span>
+                  <span flex>
+                    <span class="round-num">2P+</span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -93,7 +104,6 @@
           <div layout="row" layout-align="left center">
             <div layout="row" flex="40"></div>
             <div layout="row" flex="10"></div>
-            
           </div>
         </div>
         <div layout="column" layout-fill layout-align="top center">

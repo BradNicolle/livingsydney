@@ -41,3 +41,16 @@ md-autocomplete {
 md-slider {
   z-index: 3;
 }
+
+.padleft-dot-five {
+  padding-left: 0.5em;
+}
+.pad-em {
+  padding: 1em;
+}
+.round-num {
+  border-radius: 50px;
+  padding: 0.35em;
+  background: #3509a2;
+  color: #e6deff;
+}
