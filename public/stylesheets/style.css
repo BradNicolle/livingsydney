@@ -26,3 +26,18 @@ body {
 md-autocomplete {
   margin-left: 1em;
 }
+
+.sp-filters {
+  background: #FAFAFA;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
+.sp-filters .conditions {
+  padding-top: 1em;
+  padding-left: 1em;
+}
+
+md-slider {
+  z-index: 3;
+}

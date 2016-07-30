@@ -386,7 +386,7 @@ function initMap() {
     });
     map.mapTypes.set('map_style', styledMap);
     map.setMapTypeId('map_style');
-    
+
     var marker_image = 'images/P_green.png';
     markers = [];
 
@@ -444,6 +444,18 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoC
           });
       }
     }
+
+    $scope.showFilters = false;
+    $scope.toggleFilterMenu = function () {
+        $scope.showFilters = !$scope.showFilters;
+    };
+
+    $scope.parkingTypeOptions = [
+        { value : '<1P', distance : 1 },
+        { value : '1P', distance : 2 },
+        { value : '2P', distance: 3 },
+        { value : '2P+', distance : 4 }
+    ];
 
     $scope.simulateQuery = false;
     $scope.isDisabled    = false;

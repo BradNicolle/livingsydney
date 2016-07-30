@@ -61,11 +61,41 @@
                 No matching parking locations were found.
               </md-not-found>
             </md-autocomplete>
-            <md-button class="md-icon-button" aria-label="More">
+            <md-button class="md-icon-button" aria-label="More" ng-click="toggleFilterMenu()">
               <md-icon class="material-icons">filter_list</md-icon>
             </md-button>
           </div>
         </md-toolbar>
+        <div layout="column" class="sp-filters" ng-show="showFilters">
+          <div layout="row" layout-align="left center">
+            <div layout="row" flex="40" class="conditions">
+              <md-checkbox ng-model="free" aria-label="Free Parking" flex="20">Free</md-checkbox>
+              <md-checkbox ng-model="disability" aria-label="Disability Parking" flex="20">Disability</md-checkbox>
+            </div>
+            <div layout="row" flex="10">
+              <h3>Parking Type:</h3>
+            </div>
+            <div layout="row" flex>
+              <div layout="column" flex>
+                <div>
+                  <md-slider md-discrete ng-model="parkingType" step="1" min="1" max="4" aria-label="Parking type" flex>
+                  </md-slider>
+                </div>
+                <div layout="row">
+                  <span flex="30">&lt;1P</span>
+                  <span flex="35">1P</span>
+                  <span flex="30">2P</span>
+                  <span flex>2P+</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div layout="row" layout-align="left center">
+            <div layout="row" flex="40"></div>
+            <div layout="row" flex="10"></div>
+            
+          </div>
+        </div>
         <div layout="column" layout-fill layout-align="top center">
           <div id="map"></div>
         </div>
@@ -76,6 +106,7 @@
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.1.1/bootstrap-slider.min.js"></script>
   <!-- Angular Material requires Angular.js Libraries -->
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular-animate.min.js"></script>
