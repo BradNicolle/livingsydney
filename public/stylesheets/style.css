@@ -29,8 +29,8 @@ md-autocomplete {
 
 .sp-filters {
   background: #FAFAFA;
-  margin-left: 0.25em;
-  margin-right: 0.25em;
+  padding-left: 0.25em;
+  padding-right: 0.25em;
 }
 
 .sp-filters .conditions {
@@ -48,9 +48,9 @@ md-slider {
 .pad-em {
   padding: 1em;
 }
-.round-num {
+/*.round-num {
   border-radius: 50px;
   padding: 0.35em;
   background: #3509a2;
   color: #e6deff;
-}
+}*/
