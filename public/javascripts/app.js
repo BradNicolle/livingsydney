@@ -1,41 +1,5 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>LivingSydney</title>
-    <meta name="viewport" content="initial-scale=1.0">
-    <meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
-    <style>
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        height: 100%;
-      }
-      #logo {
-      	color: white;
-      	font-family: 'Roboto Slab', serif;
-      	position: absolute;
-      	left: 0;
-      	top: 0;
-      	z-index: 10;
-      	font-size: 24pt;
-      	padding: 10px;
-      	padding-left: 20px;
-      	text-shadow: 0px 0px 10px #000;
-      }
-    </style>
-  </head>
-  <body>
-  	<div id="logo">LivingSydney</div>
-    <div id="map"></div>
-    <script src="disabled_parking.js"></script>
-    <script src="parking_spots.js"></script>
-    <script>
-      var map;
-      var styles = [
+var map;
+var styles = [
     {
         "featureType": "all",
         "elementType": "all",
@@ -412,29 +376,28 @@
         ]
     }
 ];
-      function initMap() {
-      	var styledMap = new google.maps.StyledMapType(styles, {name: "Styled Map"});
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -33.865627, lng: 151.207275},
-          zoom: 14,
-          disableDefaultUI: true
-        });
-        map.mapTypes.set('map_style', styledMap);
-        map.setMapTypeId('map_style');
 
-        var marker_image = "P_green.png";
-        for (var i = 0; i < disabled_parking.length; i++) {
-        	var latLng = {lat: disabled_parking[i].Y_Lat, lng: disabled_parking[i].X_Lon};
-        	var marker = new google.maps.Marker({
-        		position: latLng,
-        		map: map,
-        		title: 'Lol',
-        		icon: marker_image
-        	});
+function initMap() {
+    var styledMap = new google.maps.StyledMapType(styles, { name: "Styled Map" });
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -33.865627, lng: 151.207275 },
+        zoom: 14,
+        disableDefaultUI: true
+    });
+    map.mapTypes.set('map_style', styledMap);
+    map.setMapTypeId('map_style');
+
+    var marker_image = 'images/P_green.png';
+    $.getJSON('/parking/disabled', function(data) {
+        for (var i = 0; i < data.length; i++) {
+            var latLng = { lat: data[i].Y_Lat, lng: data[i].X_Lon };
+            var marker = new google.maps.Marker({
+                position: latLng,
+                map: map,
+                title: 'Lol',
+                icon: marker_image
+            });
         }
-      }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbz8wj9x2Yt0inLdR_WuAfuzm2R7jIBn8&callback=initMap"
-    async defer></script>
-  </body>
-</html>
+    });
+    
+}

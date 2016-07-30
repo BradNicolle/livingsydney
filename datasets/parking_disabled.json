@@ -1,4 +1,4 @@
-var disabled_parking = [
+[
   {
     "FID": 0,
     "Y_Lat": -33.861831,
@@ -3552,4 +3552,4 @@ var disabled_parking = [
     "Name": "Secure Parking",
     "Name2": "Met Centre Car Park"
   }
-];
+]
