@@ -388,14 +388,20 @@ function initMap() {
     map.setMapTypeId('map_style');
 
     var marker_image = 'images/P_green.png';
+    var markers = [];
+
     $.getJSON('/parking/disabled', function(data) {
-        for (var i = 0; i < data.length; i++) {
+        for (i = 0; i < data.length; i++) {
             var latLng = { lat: data[i].Y_Lat, lng: data[i].X_Lon };
-            var marker = new google.maps.Marker({
+            markers.push(new google.maps.Marker({
                 position: latLng,
                 map: map,
                 title: 'Lol',
                 icon: marker_image
+            }));
+            google.maps.event.addListener(markers[i], 'click', function() {
+                this.myinfowindow = new google.maps.InfoWindow({content: 'Something' });
+                this.myinfowindow.open(map, this);
             });
         }
     });
