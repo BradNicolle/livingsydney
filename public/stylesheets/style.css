@@ -3,10 +3,12 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  position: relative;
 }
 
 #map {
-  height: 90%;
+  position: absolute;
+  height: 100%;
   width: 100%;
 }
 
@@ -31,6 +33,7 @@ md-autocomplete {
   background: #FAFAFA;
   padding-left: 0.25em;
   padding-right: 0.25em;
+  margin-top: 4em;
 }
 
 .sp-filters .conditions {
@@ -51,6 +54,12 @@ md-slider {
 
 .topnav {
     background-color: rgb(50, 50, 100) !important;
+}
+
+md-toolbar {
+  position: fixed;
+  left: 0;
+  top: 0;
 }
 /*
 .topnav input {
