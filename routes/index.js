@@ -32,7 +32,7 @@ router.get('/parking/disabled', function(req, res, next) {
 });
 
 router.post('/parking/nearby', function(req, res, next) {
-  // look for all points within ~5000m of Toronto.
+  // look for all points within radius m of Toronto.
   proximity.nearby(req.params.lat, req.params.lng, req.params.radius, function(err, parkingLocations){
     if(err) console.error(err)
     else console.log('nearby locations:', locations)

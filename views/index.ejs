@@ -14,12 +14,12 @@
 
 <body ng-app="livingSydney" ng-cloak>
   <div ng-show="$root.loading" class="loading">
-    <h1>Loading....</h1>
+    <h1>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quasi doloribus et id cum. Deserunt sint delectus veritatis eius eum, maiores ex? Aliquid quos reiciendis amet minima, dicta, inventore ipsa maxime?</h1>
   </div>
   <!--
     Your HTML content here
   -->
-  <div ng-controller="AppCtrl" layout="column" layout-fill ng-cloak>
+  <div ng-hide="$root.loading" ng-controller="AppCtrl" layout="column" layout-fill ng-cloak>
     <section layout="row" flex>
       <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-whiteframe="4">
         <md-toolbar class="md-theme-indigo">
