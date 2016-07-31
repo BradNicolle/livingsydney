@@ -2,7 +2,11 @@ var map;
 var directionsDisplay;
 var directionsService = new google.maps.DirectionsService();
 
-var marker_image = 'images/P_green.svg';
+var marker_image = {
+    'green': 'images/P_green.svg',
+    'pink': 'images/P_pink.svg',
+    'disabled': 'images/P_disabled.svg'
+};
 var userMarker_image = 'images/avatar.svg';
 var car_image = 'images/car.svg';
 var userMarker;
@@ -403,7 +407,7 @@ function initMap() {
     directionsDisplay.setMap(map);
 }
 
-function initMarkers($scope, $compile, url) {
+function initMarkers($scope, $compile, url, color) {
     $.getJSON(url, function(data) {
     markers = [];
     while(markers.length) { markers.pop().setMap(null); }
@@ -427,16 +431,17 @@ function initMarkers($scope, $compile, url) {
         '<md-icon class="material-icons">directions</md-icon> Park' +
     '</md-button>' +
 '</div></div>';
-    var compiled = $compile(contentString)($scope);
-
-    
+    if(!color) {
+        color = 'disabled';
+    }
+    var compiled = $compile(contentString)($scope);    
         for (i = 0; i < data.length; i++) {
             var latLng = { lat: data[i].Y_Lat, lng: data[i].X_Lon };
             markers.push(new google.maps.Marker({
                 position: latLng,
                 map: map,
                 title: 'Lol',
-                icon: marker_image
+                icon: marker_image[color]
             }));
             google.maps.event.addListener(markers[i], 'click', function() {
                 var myinfowindow = new google.maps.InfoWindow({ content: compiled[0] });
@@ -579,7 +584,7 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
 
     $scope.$watch('disability', function(newValue, oldValue) {
         if(newValue && newValue !== oldValue) {
-            initMarkers($scope, $compile, disabledUrl);
+            initMarkers($scope, $compile, disabledUrl, 'disabled');
         }
 
         if(newValue === false) {
@@ -589,7 +594,7 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
 
     $scope.$watch('free', function(newValue, oldValue) {
         if(newValue && newValue !== oldValue) {
-            initMarkers($scope, $compile, offStreetUrl);
+            initMarkers($scope, $compile, offStreetUrl, 'green');
         }
         if(newValue === false) {
             while(markers.length) { markers.pop().setMap(null); }
