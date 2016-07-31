@@ -7,6 +7,9 @@ var userMarker_image = 'images/avatar.svg';
 var car_image = 'images/car.svg';
 var userMarker;
 var first = true;
+var disabledUrl = '/parking/disabled';
+var freeUrl = '/parking/lots';
+var offStreetUrl = '/parking/offstreet';
 
 var styles = [
     {
@@ -399,8 +402,10 @@ function initMap() {
     directionsDisplay.setMap(map);
 }
 
-function initMarkers($scope, $compile) {
+function initMarkers($scope, $compile, url) {
+    $.getJSON(url, function(data) {
     markers = [];
+    while(markers.length) { markers.pop().setMap(null); }
     
     var contentString = 
         '<div><div id="content" style="width:250px;height:150px;margin-bottom:1em;"></div>' +
@@ -423,7 +428,7 @@ function initMarkers($scope, $compile) {
 '</div></div>';
     var compiled = $compile(contentString)($scope);
 
-    $.getJSON('/parking/disabled', function(data) {
+    
         for (i = 0; i < data.length; i++) {
             var latLng = { lat: data[i].Y_Lat, lng: data[i].X_Lon };
             markers.push(new google.maps.Marker({
@@ -481,10 +486,8 @@ function mapUserLocation($scope, $compile, latitude, longitude) {
         directionsService.route(directionsRequest, function(result, status) {
             if (status == 'OK') {
                 directionsDisplay.setDirections(result);
-                console.log('Directions: ' + result);
             }
             else {
-                console.log('Directions result: ' + status);
             }
         });
     }
@@ -529,6 +532,10 @@ app.config(function($locationProvider, $routeProvider) {
             templateUrl: 'templates/confirmed.html',
             controller: 'ConfirmationCtrl'
         }).
+        when('/pay', {
+            templateUrl: 'templates/pay.html',
+            controller: 'PayCtrl'
+        }).
         otherwise('/phones');
 }).run(function($rootScope) {
     $rootScope.loading = true;
@@ -566,6 +573,26 @@ app.service('GeoCoderService', function($q) {
 
 app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log, $q, GeoCoderService, $location) {
     $scope.showFilters = false;
+    $scope.disability = true;
+
+    $scope.$watch('disability', function(newValue, oldValue) {
+        if(newValue && newValue !== oldValue) {
+            initMarkers($scope, $compile, disabledUrl);
+        }
+
+        if(newValue === false) {
+            while(markers.length) { markers.pop().setMap(null); }
+        }
+    });
+
+    $scope.$watch('free', function(newValue, oldValue) {
+        if(newValue && newValue !== oldValue) {
+            initMarkers($scope, $compile, freeUrl);
+        }
+        if(newValue === false) {
+            while(markers.length) { markers.pop().setMap(null); }
+        }
+    });
     $scope.toggleFilterMenu = function () {
         $scope.showFilters = !$scope.showFilters;
     };
@@ -596,7 +623,6 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
       return GeoCoderService.geoCodeAddress(query);
     }
     function searchTextChange(text) {
-      $log.info('Text changed to ' + text);
     }
     function selectedItemChange(item) {
         if(item && item.geometry) {
@@ -604,7 +630,6 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
             var lng = item.geometry.location.lng();
             mapUserLocation($scope, $compile, lat, lng);
         }
-      $log.info('Item changed to ' + JSON.stringify(item));
     }
   })
   .controller('IndexCtrl', function ($scope, $compile, $window) {
@@ -617,9 +642,9 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
         var watchID = navigator.geolocation.watchPosition(function(position) {
             mapUserLocation($scope, $compile, position.coords.latitude, position.coords.longitude);
         });
-        initMarkers($scope, $compile);
+        initMarkers($scope, $compile, disabledUrl);
     } else {
-        initMarkers($scope, $compile);
+        initMarkers($scope, $compile, disabledUrl);
     }
   })
   .controller('ConfirmationCtrl', function ($location, $scope, $mdToast) {
@@ -635,4 +660,7 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
             $mdToast.simple('Reminder set')
         );
     }
+  })
+  .controller('PayCtrl', function ($scope) {
+      
   });
