@@ -1,8 +1,13 @@
 var map;
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+
 var marker_image = 'images/P_green.svg';
 var userMarker_image = 'images/avatar.svg';
 var car_image = 'images/car.svg';
 var userMarker;
+var first = true;
+
 var styles = [
     {
         "featureType": "all",
@@ -381,7 +386,8 @@ var styles = [
     }
 ];
 
-function initMap() {   
+function initMap() {
+    directionsDisplay = new google.maps.DirectionsRenderer();
     var styledMap = new google.maps.StyledMapType(styles, { name: "Styled Map" });
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -33.865627, lng: 151.207275 },
@@ -390,10 +396,12 @@ function initMap() {
     });
     map.mapTypes.set('map_style', styledMap);
     map.setMapTypeId('map_style');
+    directionsDisplay.setMap(map);
 }
 
 function initMarkers($scope, $compile) {
     markers = [];
+    
     var contentString = 
         '<div><div id="content" style="width:250px;height:150px;margin-bottom:1em;"></div>' +
 '<md-divider></md-divider>' +
@@ -464,13 +472,30 @@ function initMarkers($scope, $compile) {
 
 function mapUserLocation($scope, $compile, latitude, longitude) {
     var latLng = { lat: latitude, lng: longitude };
-    
+    if (!first) {
+        var directionsRequest = {
+            origin: 'Sydney, NSW',
+            destination: latLng,
+            travelMode: 'DRIVING'
+        };
+        directionsService.route(directionsRequest, function(result, status) {
+            if (status == 'OK') {
+                directionsDisplay.setDirections(result);
+                console.log('Directions: ' + result);
+            }
+            else {
+                console.log('Directions result: ' + status);
+            }
+        });
+    }
+    first = false;
+
     if(!userMarker) {
         userMarker = new google.maps.Marker({
             position: latLng,
             map: map,
             animation: google.maps.Animation.DROP,
-            title: 'Lol',
+            title: 'Anonymous',
             icon: userMarker_image
         });
 
@@ -540,21 +565,6 @@ app.service('GeoCoderService', function($q) {
 });
 
 app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log, $q, GeoCoderService, $location) {
-    $scope.toggleLeft = buildToggler('left');
-    $scope.isOpenLeft = function(){
-      return $mdSidenav('left').isOpen();
-    };
-    function buildToggler(navID) {
-      return function() {
-        // Component lookup should always be available since we are not using `ng-if`
-        $mdSidenav(navID)
-          .toggle()
-          .then(function () {
-            $log.debug("toggle " + navID + " is done");
-          });
-      }
-    }
-
     $scope.showFilters = false;
     $scope.toggleFilterMenu = function () {
         $scope.showFilters = !$scope.showFilters;
@@ -596,15 +606,6 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
         }
       $log.info('Item changed to ' + JSON.stringify(item));
     }
-  })
-  .controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
-    $scope.close = function () {
-      // Component lookup should always be available since we are not using `ng-if`
-      $mdSidenav('left').close()
-        .then(function () {
-          $log.debug("close LEFT is done");
-        });
-    };
   })
   .controller('IndexCtrl', function ($scope, $compile, $window) {
     initMap();

@@ -48,6 +48,21 @@ md-slider {
 .pad-em {
   padding: 1em;
 }
+
+.topnav {
+    background-color: rgb(50, 50, 100) !important;
+}
+/*
+.topnav input {
+    color: white !important;
+    background-color: rgb(50, 80, 140) !important;
+}
+
+.topnav input:hover {
+    background-color: rgb(70, 100, 180) !important;
+}
+
+*/
 /*.round-num {
   border-radius: 50px;
   padding: 0.35em;
