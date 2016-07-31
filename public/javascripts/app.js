@@ -430,7 +430,7 @@ function mapUserLocation($scope, $compile, latitude, longitude) {
         '<md-icon class="material-icons">payment</md-icon> Pay' +
     '</md-button>' +
     '<md-button class="md-primary" flex="50">' +
-        '<md-icon class="material-icons">directions</md-icon> Directions' +
+        '<md-icon class="material-icons">directions</md-icon> Park' +
     '</md-button>' +
 '</div></div>';
     var compiled = $compile(contentString)($scope)
@@ -492,7 +492,7 @@ function mapUserLocation($scope, $compile, latitude, longitude) {
     // }
 }
 
-var app = angular.module('livingSydney', ['ngRoute', 'ngMaterial']);
+var app = angular.module('livingSydney', ['ngRoute', 'ngMaterial', 'angularMoment']);
 
 app.config(function($locationProvider, $routeProvider) {
     $locationProvider.hashPrefix('!');
@@ -603,7 +603,9 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
     initMap();
     var navigator = $window.navigator;
     if ('geolocation' in navigator) {
-        console.log('here');
+        navigator.geolocation.getCurrentPosition(function(position) {
+            mapUserLocation($scope, $compile, position.coords.latitude, position.coords.longitude);
+        });
         var watchID = navigator.geolocation.watchPosition(function(position) {
             mapUserLocation($scope, $compile, position.coords.latitude, position.coords.longitude);
         });
@@ -612,11 +614,17 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
         initMarkers();
     }
   })
-  .controller('ConfirmationCtrl', function ($location, $scope) {
+  .controller('ConfirmationCtrl', function ($location, $scope, $mdToast) {
     $scope.dismiss = function () {
         $location.path('/');
     }
 
-    $scope.entryTime = moment().format();
-    $scope.endTime = moment().format();
+    $scope.entryTime = new Date();
+    $scope.endTime = new Date();
+
+    $scope.setReminder = function () {
+        $mdToast.show(
+            $mdToast.simple('Reminder set')
+        );
+    }
   });
