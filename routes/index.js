@@ -5,7 +5,7 @@ var parkingDisabled = require('../datasets/parking_disabled.json');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Living Sydney' });
+  res.render('index', { title: 'SydPark' });
 });
 
 router.get('/parking/lots', function(req, res, next) {

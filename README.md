@@ -1,4 +1,4 @@
-# Living Sydney
+# SydPark
 
 ### How to setup
 Install `nodejs` on your laptop. Windows user will also have to install git-bash.
