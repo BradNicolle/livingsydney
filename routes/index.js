@@ -39,7 +39,7 @@ router.get('/parking/disabled', function(req, res, next) {
 });
 
 router.get('/parking/offstreet', function(req, res, next) {
-  res.status(200).json(parkingOffStreet);
+  res.status(200).json(convertedParkingOffStreet);
 });
 
 // router.post('/parking/nearby', function(req, res, next) {
