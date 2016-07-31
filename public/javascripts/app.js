@@ -10,6 +10,7 @@ var first = true;
 var disabledUrl = '/parking/disabled';
 var freeUrl = '/parking/lots';
 var offStreetUrl = '/parking/offstreet';
+var markers = [];
 
 var styles = [
     {
@@ -574,6 +575,7 @@ app.service('GeoCoderService', function($q) {
 app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log, $q, GeoCoderService, $location) {
     $scope.showFilters = false;
     $scope.disability = true;
+    $scope.free = false;
 
     $scope.$watch('disability', function(newValue, oldValue) {
         if(newValue && newValue !== oldValue) {
@@ -587,7 +589,7 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
 
     $scope.$watch('free', function(newValue, oldValue) {
         if(newValue && newValue !== oldValue) {
-            initMarkers($scope, $compile, freeUrl);
+            initMarkers($scope, $compile, offStreetUrl);
         }
         if(newValue === false) {
             while(markers.length) { markers.pop().setMap(null); }
