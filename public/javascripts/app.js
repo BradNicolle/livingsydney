@@ -1,4 +1,7 @@
 var map;
+var marker_image = 'images/P_green.svg';
+var userMarker_image = 'images/avatar.svg';
+var userMarker;
 var styles = [
     {
         "featureType": "all",
@@ -381,13 +384,14 @@ function initMap() {
     var styledMap = new google.maps.StyledMapType(styles, { name: "Styled Map" });
     map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -33.865627, lng: 151.207275 },
-        zoom: 18,
+        zoom: 17,
         disableDefaultUI: true
     });
     map.mapTypes.set('map_style', styledMap);
     map.setMapTypeId('map_style');
+}
 
-    var marker_image = 'images/P_green.svg';
+function initMarkers() {
     markers = [];
 
     $.getJSON('/parking/disabled', function(data) {
@@ -405,7 +409,23 @@ function initMap() {
             });
         }
     });
-    
+}
+
+function mapUserLocation(latitude, longitude) {
+    var latLng = { lat: latitude, lng: longitude };
+    if(!userMarker) {
+        userMarker = new google.maps.Marker({
+            position: latLng,
+            map: map,
+            animation: google.maps.Animation.DROP,
+            title: 'Lol',
+            icon: userMarker_image
+        });
+        map.panTo(userMarker.position);
+    } else {
+        userMarker.setPosition(latLng);
+        map.panTo(userMarker.position);
+    }
 }
 
 var app = angular.module('livingSydney', ['ngRoute', 'ngMaterial']);
@@ -500,6 +520,15 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoC
         });
     };
   })
-  .controller('IndexCtrl', function () {
-      initMap();
+  .controller('IndexCtrl', function ($window) {
+    initMap();
+    var navigator = $window.navigator;
+    if ('geolocation' in navigator) {
+        var watchID = navigator.geolocation.watchPosition(function(position) {
+            mapUserLocation(position.coords.latitude, position.coords.longitude);
+        });
+        initMarkers();
+    } else {
+        initMarkers();
+    }
   });
