@@ -392,28 +392,8 @@ function initMap() {
     map.setMapTypeId('map_style');
 }
 
-function initMarkers() {
+function initMarkers($scope, $compile) {
     markers = [];
-
-    $.getJSON('/parking/disabled', function(data) {
-        for (i = 0; i < data.length; i++) {
-            var latLng = { lat: data[i].Y_Lat, lng: data[i].X_Lon };
-            markers.push(new google.maps.Marker({
-                position: latLng,
-                map: map,
-                title: 'Lol',
-                icon: marker_image
-            }));
-            google.maps.event.addListener(markers[i], 'click', function() {
-                myinfowindow = new google.maps.InfoWindow({ content: 'Something' });
-                myinfowindow.open(map, this);
-            });
-        }
-    });
-}
-
-function mapUserLocation($scope, $compile, latitude, longitude) {
-    var latLng = { lat: latitude, lng: longitude };
     var contentString = 
         '<div><div id="content" style="width:250px;height:150px;margin-bottom:1em;"></div>' +
 '<md-divider></md-divider>' +
@@ -433,8 +413,59 @@ function mapUserLocation($scope, $compile, latitude, longitude) {
         '<md-icon class="material-icons">directions</md-icon> Park' +
     '</md-button>' +
 '</div></div>';
-    var compiled = $compile(contentString)($scope)
-    // if(!userMarker) {
+    var compiled = $compile(contentString)($scope);
+
+    $.getJSON('/parking/disabled', function(data) {
+        for (i = 0; i < data.length; i++) {
+            var latLng = { lat: data[i].Y_Lat, lng: data[i].X_Lon };
+            markers.push(new google.maps.Marker({
+                position: latLng,
+                map: map,
+                title: 'Lol',
+                icon: marker_image
+            }));
+            google.maps.event.addListener(markers[i], 'click', function() {
+                var myinfowindow = new google.maps.InfoWindow({ content: compiled[0] });
+                myinfowindow.open(map, this);
+                var pano = null;
+                google.maps.event.addListener(myinfowindow, 'domready', function () {
+                    if (pano != null) {
+                        pano.unbind("position");
+                        pano.setVisible(false);
+                    }
+
+                    var fenway = {lat: latLng.lat, lng: latLng.lng};
+                    var panorama = new google.maps.StreetViewPanorama(
+                        document.getElementById('content'), {
+                        position: fenway,
+                        pov: {
+                            heading: 34,
+                            pitch: 10
+                        },
+                        navigationControl: true,
+                        navigationControlOptions: { style: google.maps.NavigationControlStyle.ANDROID },
+                        enableCloseButton: false,
+                        addressControl: false,
+                        linksControl: false
+                    });
+                    map.setStreetView(panorama);
+                    panorama.bindTo("position", userMarker);
+                    panorama.setVisible(true);
+                    google.maps.event.addListener(myinfowindow, 'closeclick', function () {
+                        panorama.unbind("position");
+                        panorama.setVisible(false);
+                        panorama = null;
+                    });
+                });
+            });
+        }
+    });
+}
+
+function mapUserLocation($scope, $compile, latitude, longitude) {
+    var latLng = { lat: latitude, lng: longitude };
+    
+    if(!userMarker) {
         userMarker = new google.maps.Marker({
             position: latLng,
             map: map,
@@ -450,46 +481,13 @@ function mapUserLocation($scope, $compile, latitude, longitude) {
             title: 'Car',
             icon: markerImage
         });
-        google.maps.event.addListener(userMarker, 'click', function() {
-            var myinfowindow = new google.maps.InfoWindow({ content: compiled[0] });
-            myinfowindow.open(map, this);
-            var pano = null;
-            google.maps.event.addListener(myinfowindow, 'domready', function () {
-                if (pano != null) {
-                    pano.unbind("position");
-                    pano.setVisible(false);
-                }
-
-                var fenway = {lat: latitude, lng: longitude};
-                var panorama = new google.maps.StreetViewPanorama(
-                    document.getElementById('content'), {
-                    position: fenway,
-                    pov: {
-                        heading: 34,
-                        pitch: 10
-                    },
-                    navigationControl: true,
-                    navigationControlOptions: { style: google.maps.NavigationControlStyle.ANDROID },
-                    enableCloseButton: false,
-                    addressControl: false,
-                    linksControl: false
-                });
-                map.setStreetView(panorama);
-                panorama.bindTo("position", userMarker);
-                panorama.setVisible(true);
-                google.maps.event.addListener(myinfowindow, 'closeclick', function () {
-                    panorama.unbind("position");
-                    panorama.setVisible(false);
-                    panorama = null;
-                });
-            });
-        });
+        
         map.panTo(userMarker.position);
         
-    // } else {
-    //     userMarker.setPosition(latLng);
-    //     map.panTo(userMarker.position);
-    // }
+    } else {
+        userMarker.setPosition(latLng);
+        map.panTo(userMarker.position);
+    }
 }
 
 var app = angular.module('livingSydney', ['ngRoute', 'ngMaterial', 'angularMoment']);
@@ -507,6 +505,14 @@ app.config(function($locationProvider, $routeProvider) {
             controller: 'ConfirmationCtrl'
         }).
         otherwise('/phones');
+}).run(function($rootScope) {
+    $rootScope.loading = true;
+    $rootScope.$on('$routeChangeStart', function() {
+        $rootScope.loading = true;
+    });
+    $rootScope.$on('$routeChangeSuccess', function() {
+        $rootScope.loading = false;
+    });
 });
 
 app.service('GeoCoderService', function($q) {
@@ -583,10 +589,11 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
       $log.info('Text changed to ' + text);
     }
     function selectedItemChange(item) {
-        var lat = item.geometry.location.lat();
-        var lng = item.geometry.location.lng();
-        mapUserLocation($scope, $compile, lat, lng);
-        // mapUserLocation($scope, $compile);
+        if(item && item.geometry) {
+            var lat = item.geometry.location.lat();
+            var lng = item.geometry.location.lng();
+            mapUserLocation($scope, $compile, lat, lng);
+        }
       $log.info('Item changed to ' + JSON.stringify(item));
     }
   })
@@ -609,9 +616,9 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
         var watchID = navigator.geolocation.watchPosition(function(position) {
             mapUserLocation($scope, $compile, position.coords.latitude, position.coords.longitude);
         });
-        initMarkers();
+        initMarkers($scope, $compile);
     } else {
-        initMarkers();
+        initMarkers($scope, $compile);
     }
   })
   .controller('ConfirmationCtrl', function ($location, $scope, $mdToast) {
