@@ -9,15 +9,15 @@
 <h2>23 Crown St</h2>
 <h2>Expected total: <span class="green">$12</span></h2>
 
-<h5>Entry: DateTime</h5>
-<h5>Exit: DateTime</h5>
+<h5>Entry: {{ entryTime }}</h5>
+<h5>Exit: {{ endTime }}</h5>
 
 <md-button 
     id="reminder"
-    class="md-primary"
+    class="md-primary md-raised"
     aria-label="Reminder Alarm"> Set alarm as reminder </md-button>
 
 <md-button 
     id="dismiss"
     class="md-default"
-    aria-label="Dismiss the view"> Dismiss </md-button>
+    aria-label="Dismiss the view" ng-click="dismiss()"> Dismiss </md-button>

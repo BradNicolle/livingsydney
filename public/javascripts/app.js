@@ -1,6 +1,7 @@
 var map;
 var marker_image = 'images/P_green.svg';
 var userMarker_image = 'images/avatar.svg';
+var car_image = 'images/car.svg';
 var userMarker;
 var styles = [
     {
@@ -404,16 +405,36 @@ function initMarkers() {
                 icon: marker_image
             }));
             google.maps.event.addListener(markers[i], 'click', function() {
-                this.myinfowindow = new google.maps.InfoWindow({content: 'Something' });
-                this.myinfowindow.open(map, this);
+                myinfowindow = new google.maps.InfoWindow({ content: 'Something' });
+                myinfowindow.open(map, this);
             });
         }
     });
 }
 
-function mapUserLocation(latitude, longitude) {
+function mapUserLocation($scope, $compile, latitude, longitude) {
     var latLng = { lat: latitude, lng: longitude };
-    if(!userMarker) {
+    var contentString = 
+        '<div><div id="content" style="width:250px;height:150px;margin-bottom:1em;"></div>' +
+'<md-divider></md-divider>' +
+'<div id="parking-info">' +
+    '<div class="street-name">23 Crown St</div>' +
+    '<div>' +
+        '<md-icon class="material-icons">person</md-icon>' +
+        '<span>120m away from Churassco</span>' +
+    '</div>' +
+'</div>' +
+'<md-divider></md-divider>' +
+'<div layout="row">' +
+    '<md-button class="md-primary" ng-click="goConfirmation()" flex="40">' +
+        '<md-icon class="material-icons">payment</md-icon> Pay' +
+    '</md-button>' +
+    '<md-button class="md-primary" flex="50">' +
+        '<md-icon class="material-icons">directions</md-icon> Directions' +
+    '</md-button>' +
+'</div></div>';
+    var compiled = $compile(contentString)($scope)
+    // if(!userMarker) {
         userMarker = new google.maps.Marker({
             position: latLng,
             map: map,
@@ -421,11 +442,54 @@ function mapUserLocation(latitude, longitude) {
             title: 'Lol',
             icon: userMarker_image
         });
+
+        var markerImage = new google.maps.MarkerImage(car_image, new google.maps.Size(80, 60), null, new google.maps.Point(0, 30), new google.maps.Size(30, 30));
+        new google.maps.Marker({
+            position: latLng,
+            map: map,
+            title: 'Car',
+            icon: markerImage
+        });
+        google.maps.event.addListener(userMarker, 'click', function() {
+            var myinfowindow = new google.maps.InfoWindow({ content: compiled[0] });
+            myinfowindow.open(map, this);
+            var pano = null;
+            google.maps.event.addListener(myinfowindow, 'domready', function () {
+                if (pano != null) {
+                    pano.unbind("position");
+                    pano.setVisible(false);
+                }
+
+                var fenway = {lat: latitude, lng: longitude};
+                var panorama = new google.maps.StreetViewPanorama(
+                    document.getElementById('content'), {
+                    position: fenway,
+                    pov: {
+                        heading: 34,
+                        pitch: 10
+                    },
+                    navigationControl: true,
+                    navigationControlOptions: { style: google.maps.NavigationControlStyle.ANDROID },
+                    enableCloseButton: false,
+                    addressControl: false,
+                    linksControl: false
+                });
+                map.setStreetView(panorama);
+                panorama.bindTo("position", userMarker);
+                panorama.setVisible(true);
+                google.maps.event.addListener(myinfowindow, 'closeclick', function () {
+                    panorama.unbind("position");
+                    panorama.setVisible(false);
+                    panorama = null;
+                });
+            });
+        });
         map.panTo(userMarker.position);
-    } else {
-        userMarker.setPosition(latLng);
-        map.panTo(userMarker.position);
-    }
+        
+    // } else {
+    //     userMarker.setPosition(latLng);
+    //     map.panTo(userMarker.position);
+    // }
 }
 
 var app = angular.module('livingSydney', ['ngRoute', 'ngMaterial']);
@@ -448,8 +512,15 @@ app.config(function($locationProvider, $routeProvider) {
 app.service('GeoCoderService', function($q) {
     this.geoCodeAddress = function(address) {
         this.geocoder = new google.maps.Geocoder();
+        var request = {
+            address: address,
+            componentRestrictions: {
+                country: 'AU',
+                locality: 'sydney'
+            }
+        };
         var deferred = $q.defer();
-        this.geocoder.geocode({ address: address }, (results, status) => {
+        this.geocoder.geocode(request, (results, status) => {
             if (status == google.maps.GeocoderStatus.OK && results.length > 0) {
                 deferred.resolve(results);
             } else {
@@ -462,7 +533,7 @@ app.service('GeoCoderService', function($q) {
     }
 });
 
-app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoCoderService, $location) {
+app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log, $q, GeoCoderService, $location) {
     $scope.toggleLeft = buildToggler('left');
     $scope.isOpenLeft = function(){
       return $mdSidenav('left').isOpen();
@@ -487,6 +558,10 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoC
         $location.path('/');
     }
 
+    $scope.goConfirmation = function () {
+        $location.path('/confirmed');
+    }
+
     $scope.parkingTypeOptions = [
         { value : '<1P', distance : 1 },
         { value : '1P', distance : 2 },
@@ -508,6 +583,10 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoC
       $log.info('Text changed to ' + text);
     }
     function selectedItemChange(item) {
+        var lat = item.geometry.location.lat();
+        var lng = item.geometry.location.lng();
+        mapUserLocation($scope, $compile, lat, lng);
+        // mapUserLocation($scope, $compile);
       $log.info('Item changed to ' + JSON.stringify(item));
     }
   })
@@ -520,15 +599,24 @@ app.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $log, $q, GeoC
         });
     };
   })
-  .controller('IndexCtrl', function ($window) {
+  .controller('IndexCtrl', function ($scope, $compile, $window) {
     initMap();
     var navigator = $window.navigator;
     if ('geolocation' in navigator) {
+        console.log('here');
         var watchID = navigator.geolocation.watchPosition(function(position) {
-            mapUserLocation(position.coords.latitude, position.coords.longitude);
+            mapUserLocation($scope, $compile, position.coords.latitude, position.coords.longitude);
         });
         initMarkers();
     } else {
         initMarkers();
     }
+  })
+  .controller('ConfirmationCtrl', function ($location, $scope) {
+    $scope.dismiss = function () {
+        $location.path('/');
+    }
+
+    $scope.entryTime = moment().format();
+    $scope.endTime = moment().format();
   });
