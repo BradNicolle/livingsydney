@@ -25,13 +25,19 @@ var convertedParkingOffStreet = _.map(parkingOffStreet, function(parking) {
   return parking;
 });
 
+var convertedParkingOnStreet = _.map(parkingLots, function(parking) {
+  parking.Y_Lat = parking.geometry.y;
+  parking.X_Lon = parking.geometry.x;
+  return parking;
+});
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'SydPark' });
 });
 
 router.get('/parking/lots', function(req, res, next) {
-  res.status(200).json(parkingLots);
+  res.status(200).json(convertedParkingOnStreet);
 });
 
 router.get('/parking/disabled', function(req, res, next) {

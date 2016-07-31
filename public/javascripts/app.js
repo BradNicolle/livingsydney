@@ -592,14 +592,24 @@ app.controller('AppCtrl', function ($scope, $compile, $timeout, $mdSidenav, $log
         }
     });
 
-    $scope.$watch('free', function(newValue, oldValue) {
+    $scope.$watch('offStreet', function(newValue, oldValue) {
         if(newValue && newValue !== oldValue) {
-            initMarkers($scope, $compile, offStreetUrl, 'green');
+            initMarkers($scope, $compile, offStreetUrl, 'pink');
         }
         if(newValue === false) {
             while(markers.length) { markers.pop().setMap(null); }
         }
     });
+
+    $scope.$watch('free', function(newValue, oldValue) {
+        if(newValue && newValue !== oldValue) {
+            initMarkers($scope, $compile, freeUrl, 'green');
+        }
+        if(newValue === false) {
+            while(markers.length) { markers.pop().setMap(null); }
+        }
+    });
+
     $scope.toggleFilterMenu = function () {
         $scope.showFilters = !$scope.showFilters;
     };
