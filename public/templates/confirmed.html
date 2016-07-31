@@ -9,8 +9,8 @@
 <h2>23 Crown St</h2>
 <h2>Expected total: <span class="green">$12</span></h2>
 
-<h5>Entry: {{ entryTime }}</h5>
-<h5>Exit: {{ endTime }}</h5>
+<h5>Entry: {{ entryTime | date }}</h5>
+<h5>Exit: {{ endTime | date }}</h5>
 
 <md-button
     ng-click="setReminder()" 
