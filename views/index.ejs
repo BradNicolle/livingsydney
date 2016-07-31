@@ -19,10 +19,10 @@
   <!--
     Your HTML content here
   -->
-  <div ng-hide="$root.loading" ng-controller="AppCtrl" layout="column" layout-fill ng-cloak>
+  <div ng-show="!$root.loading" ng-controller="AppCtrl" layout="column" layout-fill ng-cloak>
     <section layout="row" flex>
       <md-content flex>
-        <md-toolbar class="md-hue-2 md-fixed topnav">
+        <md-toolbar class="md-hue-2 md-sticky topnav">
           <div class="md-toolbar-tools">
             <!--<md-button class="md-icon-button" aria-label="Settings" ng-click="toggleLeft()">
               <md-icon class="material-icons">menu</md-icon>
